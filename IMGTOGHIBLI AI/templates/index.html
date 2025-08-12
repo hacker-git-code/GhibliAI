@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GhibliAI - Transform Images and Videos to Studio Ghibli Style</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="text-center my-4">
+            <h1 class="display-4">GhibliAI</h1>
+            <p class="lead">Transform your images and videos into beautiful Studio Ghibli style art in minutes</p>
+        </header>
+
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <div class="upload-container text-center p-4" id="upload-zone">
+                            <i class="fas fa-cloud-upload-alt fa-4x mb-3 text-primary"></i>
+                            <h3>Upload Image or Video</h3>
+                            <p>Drag and drop your file here or click to browse</p>
+                            <input type="file" id="file-input" class="d-none" accept="image/*,video/*">
+                            <button class="btn btn-primary btn-lg mt-3" id="browse-btn">Browse Files</button>
+                            
+                            <div class="settings-container mt-4">
+                                <h4>Transformation Settings</h4>
+                                <div class="row justify-content-center">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="strength-slider" class="form-label">Transformation Strength: <span id="strength-value">70%</span></label>
+                                            <input type="range" class="form-range" id="strength-slider" min="40" max="90" value="70">
+                                            <div class="d-flex justify-content-between">
+                                                <small>More Original</small>
+                                                <small>More Ghibli</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="quality-select" class="form-label">Quality/Speed</label>
+                                            <select class="form-select" id="quality-select">
+                                                <option value="fast">Fast (15 steps)</option>
+                                                <option value="balanced" selected>Balanced (20 steps)</option>
+                                                <option value="quality">High Quality (30 steps)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-text text-center mt-2">
+                                    <i class="fas fa-info-circle"></i> Higher quality takes longer but produces better results
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="processing-container d-none text-center p-4" id="processing-zone">
+                            <div class="spinner-border text-primary mb-3" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <h3>Processing Your <span id="file-type-label">File</span></h3>
+                            <p id="processing-message">This may take a few minutes depending on the file size</p>
+                            <div class="progress mt-4">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                     role="progressbar" 
+                                     style="width: 0%" 
+                                     id="progress-bar"></div>
+                            </div>
+                            <p class="mt-2" id="progress-text">0%</p>
+                            <div class="mt-4 processing-tips">
+                                <h5>While you wait:</h5>
+                                <div class="row mt-3">
+                                    <div class="col-md-4">
+                                        <i class="fas fa-image fa-2x mb-2 text-primary"></i>
+                                        <p>Images typically take 30-60 seconds to process</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <i class="fas fa-video fa-2x mb-2 text-primary"></i>
+                                        <p>Videos take longer based on length and resolution</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <i class="fas fa-magic fa-2x mb-2 text-primary"></i>
+                                        <p>The AI is carefully applying Ghibli's magical style</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="result-container d-none p-4" id="result-zone">
+                            <div class="text-center mb-4">
+                                <h3>Transformation Complete!</h3>
+                                <p id="processing-time">Processing time: <span>0</span> seconds</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card mb-4">
+                                        <div class="card-header">Original</div>
+                                        <div class="card-body p-0">
+                                            <div id="original-container" class="media-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card mb-4">
+                                        <div class="card-header">Ghibli Style</div>
+                                        <div class="card-body p-0">
+                                            <div id="result-container" class="media-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a id="download-btn" class="btn btn-success me-2" download>
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                                <button id="new-upload-btn" class="btn btn-primary">
+                                    <i class="fas fa-redo"></i> Process New File
+                                </button>
+                                <div class="mt-3">
+                                    <p class="small">Share your creation with friends!</p>
+                                    <button class="btn btn-sm btn-outline-primary me-2 share-btn" data-platform="facebook">
+                                        <i class="fab fa-facebook"></i> Share
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info me-2 share-btn" data-platform="twitter">
+                                        <i class="fab fa-twitter"></i> Tweet
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger share-btn" data-platform="pinterest">
+                                        <i class="fab fa-pinterest"></i> Pin
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4 shadow">
+                    <div class="card-body">
+                        <h4>About GhibliAI</h4>
+                        <p>
+                            GhibliAI uses advanced AI technology to transform your ordinary images and videos 
+                            into the beautiful and distinctive style of Studio Ghibli animations. Our optimized AI model 
+                            has been specifically trained to capture the essence of Hayao Miyazaki's iconic art style
+                            while delivering results in just minutes.
+                        </p>
+                        <div class="row mt-4">
+                            <div class="col-md-3 text-center">
+                                <i class="fas fa-magic fa-2x text-primary mb-2"></i>
+                                <h5>High Quality</h5>
+                                <p class="small">Superior transformation quality compared to other tools</p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <i class="fas fa-bolt fa-2x text-primary mb-2"></i>
+                                <h5>Fast Processing</h5>
+                                <p class="small">Optimized for speed with GPU acceleration</p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <i class="fas fa-sliders-h fa-2x text-primary mb-2"></i>
+                                <h5>Customizable</h5>
+                                <p class="small">Adjust transformation strength and quality settings</p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <i class="fas fa-lock fa-2x text-primary mb-2"></i>
+                                <h5>Private & Secure</h5>
+                                <p class="small">Your files are processed locally and never stored permanently</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center my-4">
+            <p>&copy; 2025 GhibliAI - Created with ❤️ for Studio Ghibli fans</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

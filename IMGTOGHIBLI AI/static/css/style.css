@@ -1,0 +1,121 @@
+/* GhibliAI Custom Styles */
+
+body {
+    background-color: #f5f8fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+header h1 {
+    color: #1a73e8;
+    font-weight: 700;
+}
+
+.card {
+    border-radius: 15px;
+    border: none;
+    overflow: hidden;
+}
+
+.upload-container {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background-color: #f9f9f9;
+}
+
+.upload-container:hover, .upload-container.dragover {
+    border-color: #1a73e8;
+    background-color: #f0f7ff;
+}
+
+.upload-container i {
+    color: #1a73e8;
+}
+
+.media-container {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #f0f0f0;
+}
+
+.media-container img, .media-container video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.btn-primary {
+    background-color: #1a73e8;
+    border-color: #1a73e8;
+}
+
+.btn-primary:hover {
+    background-color: #1557b0;
+    border-color: #1557b0;
+}
+
+.progress {
+    height: 10px;
+    border-radius: 5px;
+}
+
+/* Ghibli-inspired color accents */
+.text-primary {
+    color: #1a73e8 !important;
+}
+
+.bg-primary {
+    background-color: #1a73e8 !important;
+}
+
+.card-header {
+    background-color: #f0f7ff;
+    font-weight: 600;
+    color: #1a73e8;
+}
+
+/* Animation for upload zone */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.upload-container:hover i {
+    animation: pulse 1.5s infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .media-container {
+        height: 200px;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1a73e8;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1557b0;
+}
